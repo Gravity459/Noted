@@ -1,17 +1,79 @@
 //import liraries
-import React, {Component, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {Component, useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 // create a component
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [accountsRecords, setAccountsRecords] = useState<any>([]);
+
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    AsyncStorage.getItem('accounts')
+      .then((recordsObj: any) => {
+        return JSON.parse(recordsObj);
+      })
+      .then((recordsObj: any) => {
+        console.log(recordsObj);
+        if (Object.keys(recordsObj).length != 0) {
+          // console.log('something in records');
+
+          setAccountsRecords(recordsObj.accounts);
+        } else {
+          setAccountsRecords([]);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(accountsRecords);
+  }, [accountsRecords]);
+
+
+  const checkCreds = () => {
+    console.log(username);
+    console.log(password);
+
+    const records = [...accountsRecords]
+
+    const resultCheck = records.map((credsPair) => {
+      if(credsPair.username === username && credsPair.password === password)
+      {
+        console.log('Matched');
+        console.log(credsPair.username);
+        console.log(credsPair.password);
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+
+    if(resultCheck.includes(true)) 
+    {
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -25,6 +87,7 @@ const Login = () => {
       </View>
       <View style={styles.input_box}>
         <TextInput
+          secureTextEntry={true}
           style={{textDecorationLine: 'none'}}
           placeholder="Enter Password"
           value={password}
@@ -32,9 +95,11 @@ const Login = () => {
         />
       </View>
 
-      <TouchableOpacity onPress={() => {}} style={styles.button}>
+      <TouchableOpacity onPress={checkCreds} style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+
+      {isLoading ? <ActivityIndicator color="orange" /> : <></>}
     </View>
   );
 };

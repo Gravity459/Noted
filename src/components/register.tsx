@@ -27,7 +27,10 @@ const Register = () => {
     setLoading(true);
     AsyncStorage.getItem('accounts')
       .then((recordsObj: any) => {
-        return JSON.parse(recordsObj);
+        if(recordsObj)
+        {
+          return JSON.parse(recordsObj);
+        }
       })
       .then((recordsObj: any) => {
         console.log(recordsObj);
@@ -43,9 +46,12 @@ const Register = () => {
           setAccountsRecords([]);
         }
       })
+      .catch((err) => console.log(err))
       .finally(() => {
         setLoading(false);
       });
+
+    // AsyncStorage.removeItem('accounts');
   }, []);
 
   useEffect(() => {
@@ -104,7 +110,7 @@ const Register = () => {
 
         emailsRecords.push(email);
         usernamesRecords.push(username);
-        accountsRecords.push({emailAddress: email, password: password});
+        accountsRecords.push({username: username, password: password});
 
         setEmailRecords(emailsRecords);
         setUsernamesRecords(usernamesRecords);
@@ -116,7 +122,7 @@ const Register = () => {
       } else {
         setEmailRecords([email]);
         setUsernamesRecords([username]);
-        setAccountsRecords([{emailAddress: email, password: password}]);
+        setAccountsRecords([{username: username, password: password}]);
       }
 
       const updatedRecords = {
