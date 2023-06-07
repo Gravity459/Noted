@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 // create a component
@@ -16,58 +17,70 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [emailRecords, setEmailRecords] = useState<any>([]);
+  const [emailsRecords, setEmailRecords] = useState<any>([]);
   const [usernamesRecords, setUsernamesRecords] = useState<any>([]);
   const [accountsRecords, setAccountsRecords] = useState<any>([]);
 
-  const [records, setRecords] = useState<any>({})
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('records').then((recordsObj:any) => {
-      
-      return JSON.parse(recordsObj);
+    setLoading(true);
+    AsyncStorage.getItem('accounts')
+      .then((recordsObj: any) => {
+        return JSON.parse(recordsObj);
+      })
+      .then((recordsObj: any) => {
+        console.log(recordsObj);
+        if (Object.keys(recordsObj).length != 0) {
+          console.log('something in records');
 
-    }).then((recordsObj:any) => {
+          setEmailRecords(recordsObj.emails);
+          setUsernamesRecords(recordsObj.usernames);
+          setAccountsRecords(recordsObj.accounts);
+        } else {
+          setEmailRecords([]);
+          setUsernamesRecords([]);
+          setAccountsRecords([]);
+        }
 
-      setEmailRecords(recordsObj.emails);
-      setUsernamesRecords(recordsObj.usernames);
-      setAccountsRecords(recordsObj.accounts);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-      setRecords({emails: emailRecords, usernames: usernamesRecords, accounts: accountsRecords});
-
-    }).finally( () => { 
-      console.log(records);
-    })
-
-  }, [password]);
+  useEffect(() => {
+    console.log('wao');
+    console.log(emailsRecords);
+    console.log(usernamesRecords);
+    console.log(accountsRecords);
+  }, [emailsRecords, usernamesRecords, accountsRecords]);
 
   const checkEmail = () => {
+    console.log('checking email');
 
-    console.log('checking email')
-
-    console.log(records)
-    if (records.emails) {
-      if (records['emails'].includes(email) == true) {
+    console.log(emailsRecords);
+    if (emailsRecords) {
+      if (emailsRecords.includes(email) == true) {
         Alert.alert(
           'Email Error',
           'Email is already registered. Try to Login instead!',
         );
-        console.log('email is registered')
+        console.log('email is registered');
         return false;
       }
-      console.log("it is a new email")
+      console.log('it is a new email');
       return true;
     }
-    console.log("there were no emails")
+    console.log('there were no emails');
     return true;
   };
 
   const checkUsername = () => {
+    console.log('checking username');
 
-    console.log('checking username')
-
-    if (records.usernames) {
-      if (records.usernames.includes(username) == true) {
+    if (usernamesRecords) {
+      if (usernamesRecords.includes(username) == true) {
         Alert.alert(
           'Username Error',
           'Username is taken. Try a new username instead!',
@@ -75,59 +88,52 @@ const Register = () => {
         console.log('username taken');
         return false;
       }
-      console.log("usernames was empty")
+      console.log('this is a new username');
       return true;
     }
 
+    console.log('there were no usernames');
     return true;
   };
 
-const retrieveData = () => {
-
-  AsyncStorage.getItem('records').then((recordsObj:any) => {
-      
-    return JSON.parse(recordsObj);
-
-  }).then((recordsObj:any) => {
-
-    const emailRecords = recordsObj.emails;
-    const usernamesRecords = recordsObj.usernames;
-    const accountsRecords = recordsObj.accounts;
-
-    setRecords({emails: emailRecords, usernames: usernamesRecords, accounts: accountsRecords});
-
-  }).finally( () => { 
-    console.log(records);
-  })
-
-}
-
   const saveData = () => {
 
-    retrieveData();
-    const newRecords = records;
-    
     if (checkEmail() && checkUsername()) {
-      
-      if(newRecords.emails) {
-        
-        newRecords.emails.append(email);
-        newRecords.usernames.append(username);
-        newRecords.accounts.append({emailAddress: email, password: password});
+      if (emailsRecords) {
+
+        // const newEmailRecords = [...emailsRecords, email]
+        // const newUsernameRecords = [...usernamesRecords, username]
+        // const newAccountRecords = [...accountsRecords, {emailAddress: email, password: password}]
+
+
+        emailsRecords.push(email);
+        usernamesRecords.push(username);
+        accountsRecords.push({emailAddress: email, password: password});
+
+        setEmailRecords(emailsRecords);
+        setUsernamesRecords(usernamesRecords);
+        setAccountsRecords(accountsRecords);
+
+        // setEmailRecords(newEmailRecords);
+        // setUsernamesRecords(newUsernameRecords);
+        // setAccountsRecords(newAccountRecords);
+
+      } else {
+        setEmailRecords([email]);
+        setUsernamesRecords([username]);
+        setAccountsRecords([{emailAddress: email, password: password}]);
       }
-      
-      else 
-      {
-        newRecords.emails = [email];
-        newRecords.usernames = [username];
-        newRecords.accounts = [{emailAddress: email, password: password}];
-      }
-      
-      AsyncStorage.setItem('records', JSON.stringify(newRecords));
-      console.log(newRecords);
+
+      const updatedRecords = {emails:emailsRecords, usernames:usernamesRecords, accounts:accountsRecords};
+
+      AsyncStorage.setItem('accounts', JSON.stringify(updatedRecords));
+      console.log(updatedRecords);
+    } else {
+      console.log('oh well something was wrong with username or email');
     }
+
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.input_box}>
@@ -158,6 +164,8 @@ const retrieveData = () => {
       <TouchableOpacity onPress={saveData} style={styles.button}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
+
+      {isLoading ? <ActivityIndicator color="orange" /> : <></>}
     </View>
   );
 };
