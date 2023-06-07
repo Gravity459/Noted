@@ -42,7 +42,6 @@ const Register = () => {
           setUsernamesRecords([]);
           setAccountsRecords([]);
         }
-
       })
       .finally(() => {
         setLoading(false);
@@ -57,7 +56,7 @@ const Register = () => {
   }, [emailsRecords, usernamesRecords, accountsRecords]);
 
   const checkEmail = () => {
-    console.log('checking email');
+    console.log('Checking Email Address');
 
     console.log(emailsRecords);
     if (emailsRecords) {
@@ -66,18 +65,18 @@ const Register = () => {
           'Email Error',
           'Email is already registered. Try to Login instead!',
         );
-        console.log('email is registered');
+        console.log('Email is already registered');
         return false;
       }
-      console.log('it is a new email');
+      console.log('It is a new Email');
       return true;
     }
-    console.log('there were no emails');
+    console.log('There were no Email Addresses previously');
     return true;
   };
 
   const checkUsername = () => {
-    console.log('checking username');
+    console.log('Checking Username');
 
     if (usernamesRecords) {
       if (usernamesRecords.includes(username) == true) {
@@ -85,26 +84,23 @@ const Register = () => {
           'Username Error',
           'Username is taken. Try a new username instead!',
         );
-        console.log('username taken');
+        console.log('Username is already taken');
         return false;
       }
-      console.log('this is a new username');
+      console.log('This is a new Username');
       return true;
     }
 
-    console.log('there were no usernames');
+    console.log('There were no Usernames previously');
     return true;
   };
 
   const saveData = () => {
-
     if (checkEmail() && checkUsername()) {
       if (emailsRecords) {
-
         // const newEmailRecords = [...emailsRecords, email]
         // const newUsernameRecords = [...usernamesRecords, username]
         // const newAccountRecords = [...accountsRecords, {emailAddress: email, password: password}]
-
 
         emailsRecords.push(email);
         usernamesRecords.push(username);
@@ -117,21 +113,23 @@ const Register = () => {
         // setEmailRecords(newEmailRecords);
         // setUsernamesRecords(newUsernameRecords);
         // setAccountsRecords(newAccountRecords);
-
       } else {
         setEmailRecords([email]);
         setUsernamesRecords([username]);
         setAccountsRecords([{emailAddress: email, password: password}]);
       }
 
-      const updatedRecords = {emails:emailsRecords, usernames:usernamesRecords, accounts:accountsRecords};
+      const updatedRecords = {
+        emails: emailsRecords,
+        usernames: usernamesRecords,
+        accounts: accountsRecords,
+      };
 
       AsyncStorage.setItem('accounts', JSON.stringify(updatedRecords));
       console.log(updatedRecords);
     } else {
       console.log('oh well something was wrong with username or email');
     }
-
   };
 
   return (
@@ -154,6 +152,7 @@ const Register = () => {
       </View>
       <View style={styles.input_box}>
         <TextInput
+          secureTextEntry={true}
           style={{textDecorationLine: 'none'}}
           placeholder="Enter Password"
           value={password}
