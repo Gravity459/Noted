@@ -10,11 +10,14 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { useAppContext } from '../context/app_context';
 
 // create a component
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const {user, updateUser} = useAppContext();
 
   const [accountsRecords, setAccountsRecords] = useState<any>([]);
 
@@ -47,8 +50,8 @@ const Login = () => {
 
 
   const checkCreds = () => {
-    console.log(username);
-    console.log(password);
+    // console.log(username);
+    // console.log(password);
 
     const records = [...accountsRecords]
 
@@ -58,6 +61,7 @@ const Login = () => {
         console.log('Matched');
         console.log(credsPair.username);
         console.log(credsPair.password);
+        updateUser(credsPair.username);
         return true;
       }
       else{
