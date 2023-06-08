@@ -6,12 +6,12 @@ const AppContext = createContext<any | null>(null);
 export const useAppContext = () => useContext(AppContext);
 
 const AppContextProvider = ({children}: any) => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState('gravity');
   const [isSignedIn, setSigned] = useState<boolean>(false);
 
   useEffect(() => {
     
-    setSigned(false);
+    setSigned(true);
 
   }, []);
 
