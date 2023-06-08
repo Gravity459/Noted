@@ -1,29 +1,18 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Home from './src/screens/home';
-import LoginRegisterScreen from './src/screens/login_register';
-import AppContextProvider from './src/context/app_context';
+import LoginRegisterScreen from './src/screens/auth/login_register';
+import AppContextProvider, {useAppContext} from './src/context/app_context';
+import SignInOptions from './src/screens/signin_options';
+import Home from './src/screens/main_navigator';
+import MainNavigator from './src/screens/main_navigator';
 
-const Stack = createStackNavigator();
+const App = () => {
 
-function App() {
   return (
     <AppContextProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="MainPage" component={Home} />
-          <Stack.Screen
-            name="Login Register"
-            options={{headerShown: true}}
-            component={LoginRegisterScreen}
-          />
-          {/* <Stack.Screen
-          name="Cities"
-          component={CitiesList}
-          options={{headerShown: true, title: 'Cites of a Country'}}
-        /> */}
-        </Stack.Navigator>
+        <MainNavigator />
       </NavigationContainer>
     </AppContextProvider>
   );

@@ -1,17 +1,12 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useAppContext } from '../context/app_context';
 
 // create a component
-const Home = () => {
-
-    const { user } = useAppContext();
-
-
+const Profile = () => {
     return (
         <View style={styles.container}>
-            <Text>Welcome {user}!</Text>
+            <Text>Profile</Text>
         </View>
     );
 };
@@ -27,4 +22,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default Home;
+export default Profile;

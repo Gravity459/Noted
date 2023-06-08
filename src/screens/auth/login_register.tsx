@@ -1,8 +1,8 @@
 //import liraries
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Login from '../components/login';
-import Register from '../components/register';
+import Login from '../../components/login';
+import Register from '../../components/register';
 
 // create a component
 const LoginRegisterScreen = ({navigation, route}: any) => {

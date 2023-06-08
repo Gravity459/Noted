@@ -17,7 +17,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const {user, updateUser} = useAppContext();
+  const {user, updateUser, updateSignedIn} = useAppContext();
 
   const [accountsRecords, setAccountsRecords] = useState<any>([]);
 
@@ -62,6 +62,7 @@ const Login = () => {
         console.log(credsPair.username);
         console.log(credsPair.password);
         updateUser(credsPair.username);
+        updateSignedIn(true);
         return true;
       }
       else{

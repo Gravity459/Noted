@@ -7,13 +7,12 @@ export const useAppContext = () => useContext(AppContext);
 
 const AppContextProvider = ({children}: any) => {
   const [user, setUser] = useState('');
+  const [isSignedIn, setSigned] = useState<boolean>(false);
 
   useEffect(() => {
-    // AsyncStorage.getItem('context-counter').then(counter_value => {
-    //   if (counter_value) {
-    //     setCounter(Number(counter_value));
-    //   }
-    // });
+    
+    setSigned(false);
+
   }, []);
 
   const updateUser = (username: any) => {
@@ -21,8 +20,13 @@ const AppContextProvider = ({children}: any) => {
     setUser(username);
   };
 
+  const updateSignedIn = (status: any) => {
+    console.log(`Signed In status updated to ${status}`);
+    setSigned(status);
+  }
+
   return (
-    <AppContext.Provider value={{user, updateUser}}>
+    <AppContext.Provider value={{user, updateUser, isSignedIn, updateSignedIn}}>
       {children}
     </AppContext.Provider>
   );
