@@ -9,9 +9,12 @@ const NotesContextProvider = ({children}: any) => {
   const [userNotes, setUserNotes] = useState<any>([]);
 
 
-  const updateUserNotes = ({notes}: any) => {
+  const updateUserNotes = (notes: any) => {
     
-    if(notes !== undefined){
+    console.log("see now")
+    console.log(notes);
+
+    if(notes){
 
       console.log(notes);
       setUserNotes(notes);

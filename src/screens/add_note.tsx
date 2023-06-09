@@ -44,15 +44,18 @@ const AddNewNote = () => {
 
     const noteData = {title: title, text: bodyText, favourite: false};
 
-    if(userNotes)
+    if(userNotes.length > 0)
     {
       console.log('There are previous Notes here')
+
+      console.log(userNotes);
 
       userNotes.push(noteData);
       
       AsyncStorage.setItem(`${user}-notes`, JSON.stringify(userNotes));
 
-      updateUserNotes(userNotes);
+      console.log(userNotes);
+      // updateUserNotes(userNotes);
     }
     else {
     console.log('There are no notes here')
