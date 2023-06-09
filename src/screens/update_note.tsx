@@ -1,7 +1,7 @@
 //import liraries
 import React, {Component, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 
 import {
   View,
@@ -10,80 +10,69 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useNotesContext} from '../context/notes_context';
-import {useAppContext} from '../context/app_context';
+import { useNotesContext } from '../context/notes_context';
+import { useAppContext } from '../context/app_context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // create a component
-const AddNewNote = ({navigation}: any) => {
-  const [title, setTitle] = useState('Untitled');
-  const [bodyText, setBodyText] = useState('');
+const UpdateNote = ({navigation, route} : any) => {
 
-  const {user} = useAppContext();
-  const {userNotes, updateUserNotes} = useNotesContext();
+    const { note } = route.params;
 
+
+  const [title, setTitle] = useState(note.title);
+  const [bodyText, setBodyText] = useState(note.text);
+
+  const { user } = useAppContext();
+  const { userNotes, updateUserNotes } = useNotesContext();
+  
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const inputLines = Number((windowHeight * 0.5).toFixed(0));
+  const inputLines = Number((windowHeight*0.5).toFixed(0));
 
-  const getUniqueId = () => {
-    var id = Math.floor(Math.random() * 100000) + 1;
+    
+  
 
-    var checkList = userNotes.map((n: any) => {
-      return n.id;
-    });
 
-    while (checkList.includes(id) == true) {
-      var id = Math.floor(Math.random() * 100000) + 1;
-    }
 
-    return id;
-  };
 
   const saveNote = () => {
     console.log('Saving the new note now');
 
-    if (title === '') {
-      setTitle('Untitled');
+    if(title === "")
+    {
+      setTitle("Untitled");
     }
 
-    if (bodyText === '') {
-      setBodyText('note is empty');
+    if(bodyText === "")
+    {
+        setBodyText("note is empty");
     }
 
-    const uniqueId = getUniqueId();
 
-    const noteData = {
-      id: uniqueId,
-      title: title,
-      text: bodyText,
-      favourite: false,
-    };
 
-    if (userNotes.length > 0) {
-      console.log('There are previous Notes here');
 
-      console.log(userNotes);
+    const noteData = {id: note.id, title: title, text: bodyText, favourite: note.favourite};
 
-      const notes = [...userNotes];
 
-      notes.push(noteData);
+    const updatedNotes = userNotes.map((n:any) => {
+        if(n.id === note.id)
+        {
+            return noteData;
+        }
+        else{
+            return n;
+        }
+    })
 
-      const key = `${user.username}-notes`;
-      AsyncStorage.setItem(key, JSON.stringify(notes));
+    console.log(updatedNotes);
+    const key = `${user.username}-notes`;
+    AsyncStorage.setItem(key, JSON.stringify(updatedNotes));
+    updateUserNotes(updatedNotes);
 
-      updateUserNotes(notes);
-    } else {
-      console.log('There are no notes here');
-      const key = `${user.username}-notes`;
-      AsyncStorage.setItem(key, JSON.stringify([noteData]));
-
-      updateUserNotes([noteData]);
-    }
-
-    console.log(userNotes);
     console.log('All Notes have been saved!');
     navigation.goBack();
+
   };
 
   return (
@@ -118,7 +107,7 @@ const AddNewNote = ({navigation}: any) => {
           maxLength={1000}
           style={styles.noteInput}
           value={bodyText}
-          placeholder="Type here..."
+          placeholder='Type here...'
           onChangeText={newText => setBodyText(newText)}
         />
       </View>
@@ -166,14 +155,15 @@ const styles = StyleSheet.create({
     width: '100%',
     // height: '100%',
     margin: 0,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     fontSize: 18,
     backgroundColor: 'antiquewhite',
     alignItems: 'flex-start',
     borderRadius: 10,
     padding: 15,
+
   },
 });
 
 //make this component available to the app
-export default AddNewNote;
+export default UpdateNote;

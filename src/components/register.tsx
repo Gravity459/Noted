@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 // create a component
-const Register = () => {
+const Register = ({navigation} : any) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -104,25 +104,18 @@ const Register = () => {
   const saveData = () => {
     if (checkEmail() && checkUsername()) {
       if (emailsRecords) {
-        // const newEmailRecords = [...emailsRecords, email]
-        // const newUsernameRecords = [...usernamesRecords, username]
-        // const newAccountRecords = [...accountsRecords, {emailAddress: email, password: password}]
-
         emailsRecords.push(email);
         usernamesRecords.push(username);
-        accountsRecords.push({username: username, password: password});
+        accountsRecords.push({username: username, password: password, email: email, profilePic: ''});
 
         setEmailRecords(emailsRecords);
         setUsernamesRecords(usernamesRecords);
         setAccountsRecords(accountsRecords);
 
-        // setEmailRecords(newEmailRecords);
-        // setUsernamesRecords(newUsernameRecords);
-        // setAccountsRecords(newAccountRecords);
       } else {
         setEmailRecords([email]);
         setUsernamesRecords([username]);
-        setAccountsRecords([{username: username, password: password}]);
+        setAccountsRecords([{username: username, password: password, email: email, profilePic: ''}]);
       }
 
       const updatedRecords = {
@@ -133,9 +126,20 @@ const Register = () => {
 
       AsyncStorage.setItem('accounts', JSON.stringify(updatedRecords));
       console.log(updatedRecords);
-    } else {
+
+
+      Alert.alert(
+        'Account Registered Successfully',
+        'Your account has been registered. Login to view your Notes.',
+      );
+
+    } 
+    else {
       console.log('oh well something was wrong with username or email');
     }
+
+   
+
   };
 
   return (

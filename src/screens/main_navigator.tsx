@@ -12,6 +12,8 @@ import Home from './home';
 import MainPage from './main_page_screen';
 import AddNewNote from './add_note';
 import NotesContextProvider from '../context/notes_context';
+import UpdateNote from './update_note';
+import TakePicture from './takepicture';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,8 @@ const MainNavigator = () => {
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="Main Page" component={MainPage} />
               <Stack.Screen name="New Note" component={AddNewNote} />
+              <Stack.Screen name="Update Note" component={UpdateNote} />
+              <Stack.Screen name="Take Picture" component={TakePicture} />
             </Stack.Navigator>
           </NotesContextProvider>
        

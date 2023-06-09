@@ -61,22 +61,22 @@ const Login = () => {
         console.log('Matched');
         console.log(credsPair.username);
         console.log(credsPair.password);
-        updateUser(credsPair.username);
-        updateSignedIn(true);
+        updateUser(credsPair);
         return true;
       }
-      else{
-        return false;
-      }
     })
-
+    
+    console.log(resultCheck);
+    
     if(resultCheck.includes(true)) 
     {
-      return true;
+      updateSignedIn(true);
     }
     else{
       return false;
     }
+
+
 
   }
 

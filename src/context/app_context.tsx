@@ -6,22 +6,23 @@ const AppContext = createContext<any | null>(null);
 export const useAppContext = () => useContext(AppContext);
 
 const AppContextProvider = ({children}: any) => {
-  const [user, setUser] = useState('gravity');
+  const [user, setUser] = useState({});
   const [isSignedIn, setSigned] = useState<boolean>(false);
 
   useEffect(() => {
     
-    setSigned(true);
+    setSigned(false);
 
   }, []);
 
-  const updateUser = (username: any) => {
-    console.log(`Username changed to: ${username}`)
-    setUser(username);
+  const updateUser = (userData: any) => {
+    console.log(`Username changed to: ${userData.username}`)
+    setUser(userData);
   };
 
   const updateSignedIn = (status: any) => {
     console.log(`Signed In status updated to ${status}`);
+    // setUser({});
     setSigned(status);
   }
 
