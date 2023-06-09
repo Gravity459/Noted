@@ -4,7 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useAppContext} from '../context/app_context';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AddNewNote from './add_note';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNotesContext } from '../context/notes_context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,36 +14,58 @@ const Home = ({navigation}: any) => {
   const { user } = useAppContext();
   const { userNotes, updateUserNotes } = useNotesContext();
 
-  const [notes, setNotes] = useState<any>({});
+  const [notes, setNotes] = useState<any>([]);
 
   useEffect(() => {
-    // AsyncStorage.getItem(`${user}-notes`)
-    // .then((response:any) => {return JSON.parse(response)})
-    // .then(response => {
-    //   console.log(response);
+    AsyncStorage.getItem(`${user}-notes`)
+    .then((response:any) => {return JSON.parse(response)})
+    .then(response => {
+      console.log(response);
 
-    //   if(Object.keys(response).length != 0 && response)
-    //   {
-    //     setNotes(response);
-    //   }
-    //   else
-    //   {
-    //     setNotes({});
-    //   }
-    // })
-    // .catch(err => console.log(err))
-    // .finally(() =>
-    //   console.log("Notes are fetched")
-    // );
+      if(response)
+      {
+        console.log("There were some notes");
+        setNotes(response);
+      }
+      else
+      {
+        console.log("There were no notes");
+        setNotes([]);
+      }
+    })
+    .catch(err => console.log(err))
+    .finally(() =>
+      console.log("Notes are fetched")
+    );
     
   }, [])
 
   useEffect(() => {
     console.log("notes are now in!");
     console.log(notes);
+    console.log("did you see the notes!");
+    
 
-    updateUserNotes(notes);
+    if(notes)
+    {
+      console.log(notes);
+      updateUserNotes(notes);
+      console.log("notes were not empty");
+
+    }
+    else{
+      console.log("notes were empty");
+    }
+
   }, [notes])
+
+
+  const displayNotes = () => {
+
+  }
+
+
+
 
   const addNewNote = () =>{
     navigation.navigate('New Note');
@@ -55,6 +77,9 @@ const Home = ({navigation}: any) => {
       <TouchableOpacity onPress={addNewNote}>
         <Text>Click Me for a New Note!</Text>
       </TouchableOpacity>
+
+      {/* <FlatList renderItem={displayNotes} data={notes}> */}
+      {/* </FlatList> */}
     
     </>
   );

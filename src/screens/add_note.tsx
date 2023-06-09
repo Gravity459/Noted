@@ -33,28 +33,36 @@ const AddNewNote = () => {
 
 
   const saveNote = () => {
-    console.log('Saving the note now');
+    console.log('Saving the new note now');
+
+  
+    if(title === "")
+    {
+      return;
+    }
+
 
     const noteData = {title: title, text: bodyText, favourite: false};
 
     if(userNotes)
     {
       console.log('There are previous Notes here')
-      const allNotes = [...userNotes, noteData];
-      AsyncStorage.setItem(`${user}-notes`, JSON.stringify(allNotes));
+
+      userNotes.push(noteData);
+      
+      AsyncStorage.setItem(`${user}-notes`, JSON.stringify(userNotes));
+
+      updateUserNotes(userNotes);
     }
     else {
     console.log('There are no notes here')
       AsyncStorage.setItem(`${user}-notes`, JSON.stringify([noteData]));
+
+      updateUserNotes([noteData]);
     }
-
-
 
     console.log(userNotes);
     console.log('All Notes have been saved!')
-
-
-
 
   };
 
